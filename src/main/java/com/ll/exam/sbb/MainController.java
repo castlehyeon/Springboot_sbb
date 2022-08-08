@@ -3,6 +3,9 @@ package com.ll.exam.sbb;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 //스프링부트 스타터 웹에 어노테이션이 다 정의되어있다.
 @Controller
 public class MainController {
@@ -98,5 +101,29 @@ public class MainController {
     public int showIncrease(){
         i++;
         return i;
+    }
+    @GetMapping("/gugudan")
+    @ResponseBody
+    //강사님은 IntStream으로 구현했네. 만약 객체형태의 Integer로 받았더라면 매개변수 dan을 다시 final을 붙여서 정의한다.
+//    public String showGugudan(int dan, int limit){//Integer 즉, 객체를 넣는다면 null 허용
+//        int i = 1;
+//        for( i = 0; i<limit; i++)
+//            System.out.printf("%d * %d = %d\n", dan, i, dan*i);
+//        return """
+//                %d * %d = %d
+//                """.formatted(dan, i, dan*i);
+//    }
+    public String showGugudan(Integer dan, Integer limit) {
+        if (limit == null) {
+            limit = 9;
+        }
+
+        if (dan == null) {
+            dan = 9;
+        }
+        Integer finalDan = dan;
+        return IntStream.rangeClosed(1, limit)
+                .mapToObj(i -> "%d * %d = %d".formatted(finalDan, i, finalDan * i))
+                .collect(Collectors.joining("<br>\n"));
     }
 }
